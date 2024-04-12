@@ -1,30 +1,22 @@
-    import express from 'express'
-    import mysql from 'mysql'
-    
-    const db = mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: '',
-        database: 'empleados_crud'
-    })
-    app.post('/create', (req, res) => {
-        const nombre = req.body.nombre;
-        const edad = req.body.edad;
-        const pais = req.body.pais;
-        const cargo = req.body.cargo;
-        const anios = req.body.anios;
+import express from 'express';
+import cors from 'cors';
+import indexRouter from './routes/index.Routes.js';
+import employerRouter from './routes/employers.Routes.js';
 
-        db.query('INSERT INTO empleados(nombre, edad, pais, cargo, anios) VALUES(?,?,?,?,?)', [nombre, edad, pais, cargo, anios],
-    (err, result) => {
-        if (err) {
-            console.log(err);
-        }else{
-            res.send('Empleado registrado con exito')
-        }
-    })
-    })
-    const app = express ()
+//DECLARACION APP EXPRESS
+const app = express()
 
-    app.listen(8001, () => {
-        console.log('Escuchando en el puerto 8001');
-    })
+//IMPORT CORS
+app.use(cors())
+
+//LECTURA CORRECTA PARA DATOS COMPLEJOS
+app.use(express.json())
+
+//CALL ROUTES
+app.use('/create' , indexRouter)
+app.use('/employers' , employerRouter)
+
+//PUERTO 8001 FUNCIONANDO
+app.listen(8001, () => {
+    console.log('Escuchando en el puerto 8001');
+})
