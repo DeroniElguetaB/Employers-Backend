@@ -2,7 +2,7 @@ import { Router } from "express";
 import mysql2 from "mysql2";
 
 //VARIABLE ROUTER
-const indexRouter = Router();
+const updateRouter = Router();
 
 //DECLARACION DE VARIABLE DE BASE DE DATOS 
 const db = mysql2.createConnection({
@@ -13,22 +13,23 @@ const db = mysql2.createConnection({
 })
 
 //DESIGNACION DE ENDPOINTS//
-indexRouter.post('/', (req, res) => {
+updateRouter.put('/', (req, res) => {
+    const id = req.body.id;
     const nombre = req.body.nombre;
     const edad = req.body.edad;
     const pais = req.body.pais;
     const cargo = req.body.cargo;
     const anios = req.body.anios;
 
-    db.query('INSERT INTO empleados(nombre, edad, pais, cargo, anios) VALUES(?,?,?,?,?)', [nombre, edad, pais, cargo, anios],
+    db.query('UPDATE empleados SET nombre=?, edad=?, pais=?, cargo=?, anios=? WHERE id=?', [nombre, edad, pais, cargo, anios, id],
     (err, result) => {
     if (err) {
         console.log(err);
     }else{
         res.send(result)
-        console.log('Empleado registrado con exito');
+        console.log('Empleado actualizado con exito');
     }
     })
 })
 
-export default indexRouter;
+export default updateRouter;
